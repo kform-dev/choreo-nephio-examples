@@ -1,0 +1,13 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: Node
+metadata:
+  namespace: default
+  name: nephio.region1.us-east1.node1
+spec:
+  partition: nephio
+  region: region1
+  site: us-east1
+  node: node1
+  provider: server.example.com
+  platformType: xxx
+  

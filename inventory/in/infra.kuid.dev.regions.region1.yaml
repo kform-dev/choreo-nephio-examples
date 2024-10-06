@@ -1,0 +1,5 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: Region
+metadata:
+  namespace: default
+  name: region1

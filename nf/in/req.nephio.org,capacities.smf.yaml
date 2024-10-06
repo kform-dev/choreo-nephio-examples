@@ -1,0 +1,7 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Capacity
+metadata:
+  name: smf
+spec:
+  maxSessions: 500
+  maxNFConnections: 5

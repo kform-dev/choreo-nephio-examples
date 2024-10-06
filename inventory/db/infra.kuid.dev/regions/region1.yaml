@@ -1,0 +1,20 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: Region
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-05T07:21:37Z"
+  managedFields:
+  - apiVersion: infra.kuid.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-05T07:21:37Z"
+  name: region1
+  namespace: default
+  resourceVersion: "0"
+  uid: 5b4758dd-dc03-43b3-92a9-e7a4204a2119

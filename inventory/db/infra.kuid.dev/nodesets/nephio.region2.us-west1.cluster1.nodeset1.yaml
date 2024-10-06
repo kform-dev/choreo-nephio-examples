@@ -1,0 +1,32 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: NodeSet
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-05T07:52:57Z"
+  managedFields:
+  - apiVersion: infra.kuid.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        f:cluster: {}
+        f:nodeSet: {}
+        f:partition: {}
+        f:region: {}
+        f:site: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-05T07:52:57Z"
+  name: nephio.region2.us-west1.cluster1.nodeset1
+  namespace: default
+  resourceVersion: "0"
+  uid: 13b71502-50c5-462f-879f-43288680bf66
+spec:
+  cluster: cluster1
+  nodeSet: nodeSet1
+  partition: nephio
+  region: region2
+  site: us-west1

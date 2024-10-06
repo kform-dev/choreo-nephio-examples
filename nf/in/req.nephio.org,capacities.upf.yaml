@@ -1,0 +1,7 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Capacity
+metadata:
+  name: upf
+spec:
+  maxUplinkThroughput: 5G
+  maxDownlinkThroughput: 5G

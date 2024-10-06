@@ -1,0 +1,7 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Interface
+metadata:
+  name: sba
+spec:
+  networkInstance:
+    name: default

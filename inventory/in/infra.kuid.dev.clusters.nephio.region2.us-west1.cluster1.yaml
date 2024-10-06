@@ -1,0 +1,11 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: Cluster
+metadata:
+  namespace: default
+  name: nephio.region2.us-west.cluster1
+spec:
+  partition: nephio
+  region: region2
+  site: us-west1
+  cluster: cluster1
+  provider: xxx.example.com

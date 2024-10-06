@@ -1,0 +1,11 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: DataNetwork
+metadata:
+  name: internet
+  namespace: dnn
+spec:
+  networkInstance:
+    name: vpc-internet
+  pools:
+    - name: pool1
+      prefixLength: 24

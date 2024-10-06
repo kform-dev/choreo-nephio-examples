@@ -1,0 +1,6 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Capacity
+metadata:
+  name: amf
+spec:
+  maxSubscribers: 10000

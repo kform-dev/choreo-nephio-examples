@@ -1,0 +1,8 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: Site
+metadata:
+  namespace: default
+  name: region2.us-west1
+spec:
+  region: region2
+  site: us-west1

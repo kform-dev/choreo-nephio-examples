@@ -1,0 +1,11 @@
+apiVersion: infra.kuid.dev/v1alpha1
+kind: NodeSet
+metadata:
+  namespace: default
+  name: nephio.region1.us-east1.cluster1.nodeset1
+spec:
+  partition: nephio
+  region: region1
+  site: us-east1
+  cluster: cluster1
+  nodeSet: nodeSet1

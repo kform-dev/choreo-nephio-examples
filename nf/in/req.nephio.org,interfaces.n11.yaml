@@ -1,0 +1,7 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Interface
+metadata:
+  name: n11
+spec:
+  networkInstance:
+    name: default

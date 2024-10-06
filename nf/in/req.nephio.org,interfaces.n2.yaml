@@ -1,0 +1,9 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Interface
+metadata:
+  name: n2
+spec:
+  networkInstance:
+    name: vpc-ran
+  cniType: macvlan
+  attachmentType: vlan
