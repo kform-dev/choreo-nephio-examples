@@ -1,0 +1,51 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code: {}
+        f:type: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: req.kuid.dev.prefixes.star
+  resourceVersion: "0"
+  uid: 86d52377-cc63-441f-9894-86739f188487
+spec:
+  code: "def getSpec(self):\n  return self.get(\"spec\", {})\n\ndef getAddressFamily(self):\n
+    \ spec = getSpec(self)\n  return spec.get(\"addressFamily\", \"ipv4\")\n\ndef
+    getStatusPrefix(self):\n  status = getStatus(self)\n  return status.get(\"prefix\",
+    \"\")\n\ndef getSpecLabels(self):\n   spec = getSpec(self)\n   return spec.get(\"labels\",
+    {})\n\ndef getStatus(self):\n  if \"status\" not in self:\n    self[\"status\"]
+    = {}\n  return self.get(\"status\", {})\n\ndef setStatusPrefix(self, prefix):\n
+    \ status = getStatus(self)\n  status[\"prefix\"] = prefix\n  self[\"status\"]
+    = status\n  return self\n\ndef getPrefixReqSpec(partition, network, prefixType,
+    preficLength, addressFamily, labels):\n  return {\n    \"partition\": partition,\n
+    \   \"network\": network,\n    \"prefixType\": prefixType,\n    \"prefixLength\":
+    preficLength,\n    \"addressFamily\": addressFamily,\n    \"labels\": labels,
+    \n  }\n\ndef getPrefixReq(name, namespace, spec):\n  return {\n    \"apiVersion\":
+    \"req.kuid.dev/v1alpha1\",\n    \"kind\": \"Prefix\",\n    \"metadata\": {\n        \"name\":
+    name,\n        \"namespace\": namespace,\n    },\n    \"spec\": spec,\n  }\n\ndef
+    listReadyPrefixRequests(selector, uid):\n  resource = get_resource(\"req.kuid.dev/v1alpha1\",
+    \"Prefix\")\n  rsp = client_list(resource[\"resource\"], selector)\n  if rsp[\"error\"]
+    != None:\n    return None, False, \"list prefixes.req.kuid.dev\" + \" err: \"
+    + rsp[\"error\"]\n  \n  prefixReqs = []\n  ready = True\n  for prefixReq in rsp[\"resource\"][\"items\"]:\n
+    \   if is_conditionready(prefixReq, \"Ready\") != True:\n      ready = False\n
+    \     break\n    ownerReferences = prefixReq[\"metadata\"].get(\"ownerReferences\",
+    [])\n    for ownerRef in ownerReferences:\n      if ownerRef.get(\"uid\", \"\")
+    == uid:\n        prefixReqs.append(prefixReq)     \n  return prefixReqs, ready,
+    None "
+  type: starlark
+status: {}

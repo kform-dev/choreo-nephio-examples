@@ -1,0 +1,26 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Interface
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: req.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        f:attachmentType: {}
+        f:network: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: n3
+  namespace: default
+  resourceVersion: "0"
+  uid: 834c60bf-4d8d-417c-90ab-ad8ca801101f
+spec:
+  attachmentType: vlan
+  network: vpc-ran

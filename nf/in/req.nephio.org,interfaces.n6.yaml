@@ -2,8 +2,7 @@ apiVersion: req.nephio.org/v1alpha1
 kind: Interface
 metadata:
   name: n6
+  namespace: default
 spec:
-  networkInstance:
-    name: vpc-internet
-  cniType: macvlan
+  network: vpc-internet
   attachmentType: vlan

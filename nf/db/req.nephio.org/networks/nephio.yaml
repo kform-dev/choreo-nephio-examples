@@ -1,0 +1,47 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Network
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  finalizers:
+  - req.nephio.org.networks.nephio
+  managedFields:
+  - apiVersion: req.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  - apiVersion: req.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:finalizers:
+          v:"req.nephio.org.networks.nephio": {}
+      f:status:
+        f:conditions:
+          k:{"type":"Ready"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+    manager: req.nephio.org.networks.nephio
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: nephio
+  namespace: default
+  resourceVersion: "1"
+  uid: dae367db-00d4-452b-a206-0c9a8db7f797
+status:
+  conditions:
+  - lastTransitionTime: "2024-10-07T11:30:29Z"
+    message: ""
+    reason: Ready
+    status: "True"
+    type: Ready

@@ -1,0 +1,24 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Capacity
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: req.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        f:maxSubscribers: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: amf
+  namespace: default
+  resourceVersion: "0"
+  uid: 6a01f22d-8c2c-482b-a282-2e09c28cfdaf
+spec:
+  maxSubscribers: 10000

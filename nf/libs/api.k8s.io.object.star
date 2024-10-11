@@ -58,3 +58,7 @@ def getSpec(self):
 
 def getStatus(self):
   return self.get("status", {})
+
+def getUID(self):
+  metadata = getMetadata(self)
+  return metadata.get("uid", {})

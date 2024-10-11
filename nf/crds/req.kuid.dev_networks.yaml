@@ -38,10 +38,16 @@ spec:
             type: object
           spec:
             properties:
+              ipFamilyPolicy:
+                type: string
+              name:
+                type: string
               partition:
                 type: string
               type:
                 type: string
+            required:
+            - ipFamilyPolicy
             type: object
           status:
             properties:

@@ -1,0 +1,54 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code: {}
+        f:type: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: nf.nephio.org.nfdeployments.star
+  resourceVersion: "0"
+  uid: dbe0ef22-9529-4c82-a064-54c080c9423b
+spec:
+  code: |
+    load("id.kuid.dev.ids.star", "getClusterKeys")
+
+    def getSpec(self):
+      return self.get("spec", {})
+
+    def getNFDeploymentPartition(self):
+      spec = getSpec(self)
+      return spec.get("partition", "")
+
+    def getNFDeploymentProvider(self):
+      spec = getSpec(self)
+      return spec.get("provider", "")
+
+    def getNFDeploymentName(self):
+      spec = getSpec(self)
+      return spec.get("name", "")
+
+    def getNFDeploymentClusterID(self):
+      clusterKeys = getClusterKeys()
+      spec = getSpec(self)
+      clusterID = {}
+      for key, val in spec.items():
+        if key in clusterKeys:
+          clusterID[key] = val
+      return clusterID
+  type: starlark
+status: {}

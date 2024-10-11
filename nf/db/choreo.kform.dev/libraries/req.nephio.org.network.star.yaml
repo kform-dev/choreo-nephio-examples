@@ -1,0 +1,35 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code: {}
+        f:type: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: req.nephio.org.network.star
+  resourceVersion: "0"
+  uid: 9a855a5a-5bca-4ab3-b72b-2f11138ddb93
+spec:
+  code: |-
+    def getSpec(self):
+      return self.get("spec", {})
+
+    def getSpecName(self):
+      spec =  self.get("spec", {})
+      return spec.get("name", {})
+  type: starlark
+status: {}

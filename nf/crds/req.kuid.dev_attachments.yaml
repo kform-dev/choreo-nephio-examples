@@ -41,6 +41,9 @@ spec:
               cluster:
                 description: Cluster defines the name of the cluster
                 type: string
+              interface:
+                description: Interface defines the name of the interface
+                type: string
               ipFamilyPolicy:
                 description: IPFamilyPolicy defines the ip family policy on this interface
                   to determine single stack, dual stack
@@ -72,6 +75,7 @@ spec:
                 description: VLANTagging defines if the attchement requires VLANTagging
                 type: boolean
             required:
+            - interface
             - partition
             - region
             - site

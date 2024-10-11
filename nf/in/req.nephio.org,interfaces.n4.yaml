@@ -2,8 +2,7 @@ apiVersion: req.nephio.org/v1alpha1
 kind: Interface
 metadata:
   name: n4
+  namespace: default
 spec:
-  networkInstance:
-    name: vpc-internal
-  cniType: macvlan
+  network: vpc-internal
   attachmentType: vlan

@@ -1,0 +1,50 @@
+
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+# name can be inferred from the filename or from the for resource
+spec: 
+  for: 
+    group: req.nephio.org
+    version: v1alpha1
+    kind: Network
+    selector: {}
+  owns:
+  - group: req.kuid.dev
+    version: v1alpha1
+    kind: Network
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n2
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n3
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n4
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n6
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n11
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: sba

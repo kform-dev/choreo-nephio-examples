@@ -1,0 +1,12 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: DataNetwork
+metadata:
+  name: nephio.internet.ipv4
+  namespace: default
+spec:
+  network: vpc-internet
+  pools:
+  - name: pool1
+    prefixLength: 24
+    ipFamilyPolicy: ipv4-only
+

@@ -1,0 +1,52 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code:
+          .: {}
+          f:reconciler.star: {}
+        f:for:
+          .: {}
+          f:group: {}
+          f:kind: {}
+          f:selector: {}
+          f:version: {}
+        f:type: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: req.kuid.dev.networks.all
+  resourceVersion: "0"
+  uid: 257ac874-b601-4365-8ec1-fb76b50b4fbc
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"req.kuid.dev.networks.star\",
+      \"getSpecName\", \"setStatusName\")\n\nfinalizer = \"req.kuid.dev.networks.all\"\nconditionType
+      = \"Ready\"\n\ndef reconcile(self):\n  #self is prefix req\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  setStatusName(self,
+      getSpecName(self))\n  \n  return reconcile_result(self, False, 0, conditionType,
+      \"\", False)\n"
+  for:
+    group: req.kuid.dev
+    kind: Network
+    selector: {}
+    version: v1alpha1
+  type: starlark
+status: {}

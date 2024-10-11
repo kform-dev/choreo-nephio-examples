@@ -1,0 +1,11 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: UpstreamRef
+metadata:
+  name: inventory
+spec:
+  url: https://github.com/kform-dev/choreo-nephio-examples.git
+  directory: inventory
+  ref:
+    type: hash
+    name: 61f19810e1d6af998366a915f624928fe80ea8e4
+  

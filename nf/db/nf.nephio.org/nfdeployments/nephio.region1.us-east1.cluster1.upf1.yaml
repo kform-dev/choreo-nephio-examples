@@ -1,0 +1,121 @@
+apiVersion: nf.nephio.org/v1alpha1
+kind: NFDeployment
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  finalizers:
+  - nf.nephio.org.nfdeployments.upf.free5gc.io.claim
+  - nf.nephio.org.nfdeployments.upf.free5gc.io.ready
+  generation: 3
+  managedFields:
+  - apiVersion: nf.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        f:cluster: {}
+        f:name: {}
+        f:partition: {}
+        f:provider: {}
+        f:region: {}
+        f:site: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  - apiVersion: nf.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:finalizers:
+          v:"nf.nephio.org.nfdeployments.upf.free5gc.io.claim": {}
+      f:status:
+        f:conditions:
+          k:{"type":"ClaimReady"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+    manager: nf.nephio.org.nfdeployments.upf.free5gc.io.claim
+    operation: Apply
+    time: "2024-10-07T11:45:35Z"
+  - apiVersion: nf.nephio.org/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:finalizers:
+          v:"nf.nephio.org.nfdeployments.upf.free5gc.io.ready": {}
+      f:spec:
+        f:interfaces: {}
+        f:networkInstances: {}
+      f:status:
+        f:conditions:
+          k:{"type":"Ready"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+    manager: nf.nephio.org.nfdeployments.upf.free5gc.io.ready
+    operation: Apply
+    time: "2024-10-07T11:49:00Z"
+  name: nephio.region1.us-east1.cluster1.upf1
+  namespace: default
+  resourceVersion: "6"
+  uid: 48000760-b7b8-471c-99e7-e8ccd1d7e3a0
+spec:
+  cluster: cluster1
+  interfaces:
+  - ipv4:
+      address: 192.1.0.0/24
+      gateway: 192.1.0.1
+    ipv6:
+      address: 192:1::/64
+      gateway: 192:1::1
+    name: n3
+  - ipv4:
+      address: 192.2.0.0/24
+      gateway: 192.2.0.1
+    ipv6:
+      address: 192:2::/64
+      gateway: 192:2::1
+    name: n4
+  - ipv4:
+      address: 192.3.0.0/24
+      gateway: 192.3.0.1
+    ipv6:
+      address: 192:3::/64
+      gateway: 192:3::1
+    name: n6
+  name: upf1
+  networkInstances:
+  - interfaces:
+    - n3
+    name: vpc-ran
+  - interfaces:
+    - n4
+    name: vpc-internal
+  - interfaces:
+    - n6
+    name: vpc-internet
+  partition: nephio
+  provider: upf.free5gc.io
+  region: region1
+  site: us-east1
+status:
+  conditions:
+  - lastTransitionTime: "2024-10-07T11:45:35Z"
+    message: ""
+    reason: Ready
+    status: "True"
+    type: ClaimReady
+  - lastTransitionTime: "2024-10-07T11:45:35Z"
+    message: ""
+    reason: Ready
+    status: "True"
+    type: Ready

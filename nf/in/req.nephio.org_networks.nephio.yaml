@@ -1,0 +1,5 @@
+apiVersion: req.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: nephio #partition
+  namespace: default

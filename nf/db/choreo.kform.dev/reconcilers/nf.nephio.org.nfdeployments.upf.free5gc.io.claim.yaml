@@ -1,0 +1,108 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code:
+          .: {}
+          f:reconciler.star: {}
+        f:for:
+          .: {}
+          f:group: {}
+          f:kind: {}
+          f:selector:
+            .: {}
+            f:match:
+              .: {}
+              f:spec.provider: {}
+          f:version: {}
+        f:owns: {}
+        f:type: {}
+        f:watches: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:30:29Z"
+  name: nf.nephio.org.nfdeployments.upf.free5gc.io.claim
+  resourceVersion: "0"
+  uid: 9c00b89f-06c2-4c7f-9f52-b3131ce44af6
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"nf.nephio.org.nfdeployments.star\",
+      \"getNFDeploymentClusterID\", \"getNFDeploymentPartition\", \"getNFDeploymentName\")\nload(\"req.nephio.org.interface.star\",
+      \"getNetwork\", \"getAttachmentType\", \"getIPFamilyPolicy\", \"getInterfaces\")\nload(\"req.kuid.dev.attachments.star\",
+      \"getAttachmentReqSpec\", \"getAttachmentReq\")\n\nfinalizer = \"nf.nephio.org.nfdeployments.upf.free5gc.io.claim\"\nconditionType
+      = \"ClaimReady\"\n\ndef reconcile(self):\n  #self is nf deployment\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  itfces
+      = [\"n3\", \"n4\", \"n6\", \"sba\"]\n  interfaces, err = getInterfaces(self,
+      itfces)\n  if err != None:\n    return reconcile_result(self, True, 0, conditionType,
+      err, False)\n  \n  for attachementReq in getKuidAttachmentReq(self, interfaces):\n
+      \   rsp = client_create(attachementReq)\n    if rsp[\"error\"] != None:\n        return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n\n
+      \ rsp = client_apply()\n  if rsp[\"error\"] != None:\n    return reconcile_result(self,
+      True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n  return reconcile_result(self,
+      False, 0, conditionType, \"\", False)\n\ndef getKuidAttachmentReq(self, interfaces):\n
+      \ attachmentReq = []\n  for itfce in interfaces:\n    ## only request networks/interfaces
+      for non default network\n    if getNetwork(itfce) != \"default\":\n      attachmentReq.append(getKuidAttachmentInterfaceReq(self,
+      itfce))\n  return attachmentReq\n\ndef getKuidAttachmentInterfaceReq(self, itfce):\n
+      \ clusterID = getNFDeploymentClusterID(self)\n\n  itfceName = getName(itfce)\n
+      \ nodeName = getNFDeploymentName(self)\n\n  attachementSpec = getAttachmentReqSpec(\n
+      \   itfceName,\n    nodeName,\n    clusterID, \n    getNetwork(itfce), \n    getIPFamilyPolicy(itfce),
+      \n    getAttachmentType(itfce),\n  )\n  name = getName(self) + \".\" + itfceName\n
+      \ return getAttachmentReq(name, getNamespace(self), attachementSpec)\n"
+  for:
+    group: nf.nephio.org
+    kind: NFDeployment
+    selector:
+      match:
+        spec.provider: upf.free5gc.io
+    version: v1alpha1
+  owns:
+  - group: req.kuid.dev
+    kind: Attachment
+    version: v1alpha1
+  - group: req.kuid.dev
+    kind: Prefix
+    version: v1alpha1
+  type: starlark
+  watches:
+  - group: req.nephio.org
+    kind: Capacity
+    selector:
+      match:
+        metadata.name: upf
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n3
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n4
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n6
+    version: v1alpha1
+status: {}

@@ -1,5 +1,18 @@
 # Design
 
+TODO:
+- capacity: easy
+- dnn: easy
+- parameterRef: easy
+
+##
+
+network controller
+- condition: Ready
+- for network
+- creates
+    - network req
+
 dnn controller
 - condition: DNNReady
 - for dnn
@@ -17,14 +30,13 @@ nf controller (claims)
     - amf:
         - n2, sba 
 - creates:
-    - network requests (clusters)
     - attachment requests
     - SetClaimReady False
 
 req.kuid.dev reconcilers
     - 
 
-nfcontroller
+nfcontroller (ready)
 - condition: Ready
 - for nfdeployment based per provider + ClaimReady 
 - look at amf request

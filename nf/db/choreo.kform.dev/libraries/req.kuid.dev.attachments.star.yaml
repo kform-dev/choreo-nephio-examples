@@ -1,0 +1,72 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-10-07T11:30:29Z"
+  generation: 1
+  managedFields:
+  - apiVersion: choreo.kform.dev/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:api.choreo.kform.dev/origin: {}
+      f:spec:
+        .: {}
+        f:code: {}
+        f:type: {}
+      f:status: {}
+    manager: inputfileloader
+    operation: Apply
+    time: "2024-10-07T11:48:32Z"
+  name: req.kuid.dev.attachments.star
+  resourceVersion: "1"
+  uid: a684a3d7-e29a-4961-abc8-fc8bc1e3b8b4
+spec:
+  code: "def getSpec(self):\n  return self.get(\"spec\", {})\n\n\ndef getSpecCluster(self):\n
+    \ spec = getSpec(self)\n  return spec.get(\"cluster\", \"\")\n\ndef getSpecInterface(self):\n
+    \ spec = getSpec(self)\n  return spec.get(\"interface\", \"\")\n\ndef getSpecNetwork(self):\n
+    \ spec = getSpec(self)\n  return spec.get(\"network\", \"\")\n\ndef getStatus(self):\n
+    \ if \"status\" not in self:\n    self[\"status\"] = {}\n  return self.get(\"status\",
+    {})\n\ndef getStatusAF(self, af):\n  status = getStatus(self)\n  return status.get(af)\n\ndef
+    getStatusPrefixPerAF(self, af):\n  statusPerAF = getStatusAF(self, af)\n  if statusPerAF
+    == None:\n    return None\n  return statusPerAF.get(\"prefixes\", [])\n\ndef setStatusVLAN(self,
+    vlan):\n  status = getStatus(self)\n  status[\"vlan\"] = vlan\n  self[\"status\"]
+    = status\n  return self\n\ndef setStatusPrefix(self, af, newPrefix, defaultGateway):\n
+    \ status = getStatus(self)\n  if af not in status:\n    status[af] = {\"prefixes\":
+    []}\n\n  prefixes = status[af][\"prefixes\"]\n  found = False\n  for prefix in
+    prefixes:\n    if prefix[\"prefix\"] == newPrefix:\n      if defaultGateway ==
+    \"\":\n        prefix = remove_key(prefix, \"defaultGateway\")\n      else:  \n
+    \       prefix[\"defaultGateway\"] = defaultGateway\n      found = True\n      break\n
+    \ if not found:\n    if defaultGateway == \"\":\n       prefixes.append({\n        \"prefix\":
+    newPrefix,\n      })\n    else:\n      prefixes.append({\n        \"prefix\":
+    newPrefix,\n        \"defaultGateway\": defaultGateway,\n      })\n  return self\n\ndef
+    getAttachmentReqSpec(itfceName, nodeName, clusterID, network, ipFamilyPolicy,
+    attachementType):\n  spec = {}\n  for key, val in clusterID.items():\n    spec[key]
+    = val\n  spec[\"interface\"] = itfceName\n  spec[\"node\"] = nodeName\n  spec[\"network\"]
+    = network\n  spec[\"ipFamilyPolicy\"] = ipFamilyPolicy\n  if attachementType ==
+    \"vlan\":\n    spec[\"vlanTagging\"] = True\n  return spec\n\ndef getAttachmentReq(name,
+    namespace, spec):\n  return {\n    \"apiVersion\": \"req.kuid.dev/v1alpha1\",\n
+    \   \"kind\": \"Attachment\",\n    \"metadata\": {\n        \"name\": name,\n
+    \       \"namespace\": namespace,\n    },\n    \"spec\": spec,\n  }\n        \ndef
+    remove_key(d, key):\n    new_dict = {}\n    for k, v in d.items():\n        if
+    k != key:\n            new_dict[k] = v\n    return new_dict\n\ndef listReadyAttachmentRequests(selector,
+    uid):\n  resource = get_resource(\"req.kuid.dev/v1alpha1\", \"Attachment\")\n
+    \ rsp = client_list(resource[\"resource\"], selector)\n  if rsp[\"error\"] !=
+    None:\n    return None, False, \"list attachments.req.kuid.dev\" + \" err: \"
+    + rsp[\"error\"]\n  \n  attachmentReqs = []\n  ready = True\n  for attachmentReq
+    in rsp[\"resource\"][\"items\"]:\n    if is_conditionready(attachmentReq, \"Ready\")
+    != True:\n      ready = False\n      break\n    ownerReferences = attachmentReq[\"metadata\"].get(\"ownerReferences\",
+    [])\n    for ownerRef in ownerReferences:\n      if ownerRef.get(\"uid\", \"\")
+    == uid:\n        attachmentReqs.append(attachmentReq)    \n\n\n  sortListWithKeyFn(attachmentReqs,
+    lambda x: (x[\"spec\"].get(\"interface\", \"\"))) \n  return attachmentReqs, ready,
+    None \n\n\ndef sortListWithKeyFn(arr, key_func):\n  for i in range(1, len(arr)):\n
+    \   key_item = arr[i]\n    key_value = key_func(key_item)\n    # Insert key_item
+    into the sorted sequence arr[0 ... i-1]\n    inserted = False\n    for j in range(i
+    - 1, -1, -1):\n      if key_func(arr[j]) > key_value:\n        arr[j + 1] = arr[j]\n
+    \     else:\n        arr[j + 1] = key_item\n        inserted = True\n        break\n
+    \   if not inserted:\n      arr[0] = key_item\n  return arr"
+  type: starlark
+status: {}

@@ -1,0 +1,44 @@
+
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+# name can be inferred from the filename or from the for resource
+spec: 
+  for: 
+    group: nf.nephio.org
+    version: v1alpha1
+    kind: NFDeployment
+    selector:
+      match:
+        spec.provider: upf.free5gc.io
+  owns:
+  - group: req.kuid.dev
+    version: v1alpha1
+    kind: Attachment
+  - group: req.kuid.dev
+    version: v1alpha1
+    kind: Prefix
+  watches:
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Capacity
+    selector:
+      match:
+        metadata.name: upf
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n3
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n4
+  - group: req.nephio.org
+    version: v1alpha1
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n6
