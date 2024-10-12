@@ -1,0 +1,80 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: req.nephio.org.networks.nephio
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"req.nephio.org.interface.star\",
+      \"getNetwork\", \"getIPFamilyPolicy\", \"listInterfaces\")\nload(\"req.kuid.dev.networks.star\",
+      \"getNetworkReqSpec\", \"getNetworkReq\")\n\n\nfinalizer = \"req.nephio.org.networks.nephio\"\nconditionType
+      = \"Ready\"\n\ndef reconcile(self):\n  #self is network\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  interfaces,
+      err = listInterfaces({})\n  if err != None:\n    return reconcile_result(self,
+      True, 0, conditionType, err, False)\n  \n  for networkReq in getKuidNetworkReq(self,
+      interfaces):\n    rsp = client_create(networkReq)\n    if rsp[\"error\"] !=
+      None:\n        return reconcile_result(self, True, 0, conditionType, rsp[\"error\"],
+      rsp[\"fatal\"])\n\n  rsp = client_apply()\n  if rsp[\"error\"] != None:\n    return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \ return reconcile_result(self, False, 0, conditionType, \"\", False)\n\ndef
+      getKuidNetworkReq(self, interfaces):\n  networks = {\n    \"default\": \"dual-stack\",\n
+      \ }\n  networkReq = []\n  for itfce in interfaces:\n    ## only request networks/interfaces
+      for non default network\n    network = getNetwork(itfce)\n    if network not
+      in networks:\n      networks[network] = getIPFamilyPolicy(itfce)\n      partition
+      = getName(self)\n\n      networkReqSpec = getNetworkReqSpec(\n        network,\n
+      \       partition,\n        \"private\",\n        getIPFamilyPolicy(itfce),\n
+      \     )\n\n      name = partition + \".\" + network\n\n      networkReq.append(getNetworkReq(name,
+      getNamespace(self), networkReqSpec))\n  return networkReq\n  "
+  for:
+    group: req.nephio.org
+    kind: Network
+    selector: {}
+    version: v1alpha1
+  owns:
+  - group: req.kuid.dev
+    kind: Network
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n2
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n3
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n4
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n6
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: n11
+    version: v1alpha1
+  - group: req.nephio.org
+    kind: Interface
+    selector:
+      match:
+        metadata.name: sba
+    version: v1alpha1
+  type: starlark
+status: {}

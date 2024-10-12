@@ -1,0 +1,17 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: req.nephio.org.network.star
+spec:
+  code: |-
+    def getSpec(self):
+      return self.get("spec", {})
+
+    def getSpecName(self):
+      spec =  self.get("spec", {})
+      return spec.get("name", {})
+  type: starlark
+status: {}

@@ -1,0 +1,43 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: req.nephio.org.dnns.ready
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\", \"getUID\")\nload(\"req.nephio.org.dnn.star\",
+      \"getNetwork\", \"getPools\", \"getPoolName\", \"getPoolPrefixLength\", \"setStatusPoolPrefix\")\nload(\"req.kuid.dev.prefixes.star\",
+      \"getPrefixReqSpec\", \"getPrefixReq\", \"listReadyPrefixRequests\", \"getAddressFamily\",
+      \"getStatusPrefix\", \"getSpecLabels\")\n\n\nfinalizer = \"req.nephio.org.dnns.ready\"\nconditionType
+      = \"Ready\"\n\ndef reconcile(self):\n  #self is dnn\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  prefixRequests,
+      ready, err = listReadyPrefixRequests({}, getUID(self))\n  if err != None:\n
+      \   return reconcile_result(self, False, 0, conditionType, err, False)\n  \n
+      \ if not ready:\n    return reconcile_result(self, False, 0, conditionType,
+      \"prefix req not ready\", False)\n\n  for prefixRequest in prefixRequests:\n
+      \   af = getAddressFamily(prefixRequest)\n    prefix = getStatusPrefix(prefixRequest)\n\n
+      \   labels = getSpecLabels(prefixRequest)\n    poolName = labels.get(\"ipam.be.kuid.dev/poolName\",
+      \"\")\n    setStatusPoolPrefix(self, poolName, af, prefix)\n    \n  \n  return
+      reconcile_result(self, False, 0, conditionType, \"\", False)\n\n\n"
+  for:
+    group: req.nephio.org
+    kind: DataNetwork
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'ClaimReady' && c.status == 'True'): "true"
+    version: v1alpha1
+  type: starlark
+  watches:
+  - group: req.kuid.dev
+    kind: Prefix
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"
+    version: v1alpha1
+status: {}

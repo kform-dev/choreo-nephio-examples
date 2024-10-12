@@ -1,0 +1,27 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: req.nephio.org.interface.star
+spec:
+  code: "load(\"api.k8s.io.object.star\", \"getNamespace\")\n\ndef getSpec(self):\n
+    \ return self.get(\"spec\", {})\n\ndef getNetwork(self):\n  spec = getSpec(self)\n
+    \ return spec.get(\"network\", \"default\")\n\ndef getAttachmentType(self):\n
+    \ spec = getSpec(self)\n  return spec.get(\"attachmentType\", \"none\")\n\ndef
+    getIPFamilyPolicy(self):\n  spec = getSpec(self)\n  return spec.get(\"ipFamilyPolicy\",
+    \"dual-stack\")\n\ndef getInterface(name, namespace):\n  resource = get_resource(\"req.nephio.org/v1alpha1\",
+    \"Interface\")\n  rsp = client_get(name, namespace, resource[\"resource\"])\n
+    \ if rsp[\"error\"] != None:\n    return None, \"interface.req.nephio.org/\" +
+    name + \" err: \" + rsp[\"error\"]\n  \n  return rsp[\"resource\"], None\n\ndef
+    listInterfaces(selector):\n  resource = get_resource(\"req.nephio.org/v1alpha1\",
+    \"Interface\")\n  rsp = client_list(resource[\"resource\"], selector)\n  if rsp[\"error\"]
+    != None:\n    return None, \"list interfaces.req.nephio.org\" + \" err: \" + rsp[\"error\"]\n
+    \ \n  interfaces = []\n  for itfce in rsp[\"resource\"][\"items\"]:\n    interfaces.append(itfce)\n
+    \ return interfaces, None  \n\n# itfces is a list of interface names\ndef getInterfaces(self,
+    itfces):\n  interfaces = []\n  for itfce in itfces:\n    itfce, err = getInterface(itfce,
+    getNamespace(self))\n    if err != None:\n      return None, err\n    interfaces.append(itfce)\n
+    \ return interfaces, None\n"
+  type: starlark
+status: {}

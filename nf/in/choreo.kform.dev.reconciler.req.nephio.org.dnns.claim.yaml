@@ -1,0 +1,42 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: req.nephio.org.dnns.claim
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"req.nephio.org.dnn.star\",
+      \"getNetwork\", \"getPools\", \"getPoolName\", \"getPoolPrefixLength\", \"getPoolAddressFamilies\")\nload(\"req.kuid.dev.prefixes.star\",
+      \"getPrefixReqSpec\", \"getPrefixReq\")\n\n\nfinalizer = \"req.nephio.org.dnns.claim\"\nconditionType
+      = \"ClaimReady\"\n\ndef reconcile(self):\n  #self is dnn\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  for prefixReq
+      in getKuidPrefixReq(self):\n    rsp = client_create(prefixReq)\n    if rsp[\"error\"]
+      != None:\n        return reconcile_result(self, True, 0, conditionType, rsp[\"error\"],
+      rsp[\"fatal\"])\n\n  rsp = client_apply()\n  if rsp[\"error\"] != None:\n    return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \ return reconcile_result(self, False, 0, conditionType, \"\", False)\n\n\ndef
+      getKuidPrefixReq(self):\n  prefixReq = []\n  for pool in getPools(self):\n    labels
+      = {\n      \"ipam.be.kuid.dev/purpose\": \"dnn\",\n      \"ipam.be.kuid.dev/poolName\":
+      getPoolName(pool),\n    }\n\n    afs = getPoolAddressFamilies(pool)\n\n    for
+      af in afs:\n      spec = getPrefixReqSpec(\n        \"nephio\", \n        getNetwork(self),
+      \n        \"pool\", \n        getPoolPrefixLength(pool), \n        af, \n        labels,\n
+      \     )\n      prefixReq.append(getPrefixReq(\n        \"nephio\" + \".\" +
+      getNetwork(self) + \".\" + getPoolName(pool) + \".\" +  af,\n        getNamespace(self),\n
+      \       spec,\n      ))\n    \n  return prefixReq\n\n\n\n\n    \n    \n\n"
+  for:
+    group: req.nephio.org
+    kind: DataNetwork
+    selector: {}
+    version: v1alpha1
+  owns:
+  - group: req.kuid.dev
+    kind: Prefix
+    version: v1alpha1
+  type: starlark
+status: {}

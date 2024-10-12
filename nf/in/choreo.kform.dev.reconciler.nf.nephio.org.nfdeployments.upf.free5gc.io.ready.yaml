@@ -1,0 +1,62 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: nf.nephio.org.nfdeployments.upf.free5gc.io.ready
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\", \"getUID\")\nload(\"nf.nephio.org.nfdeployments.star\",
+      \"getSpec\", \"getNFDeploymentClusterID\", \"getNFDeploymentPartition\", \"getNFDeploymentName\")\nload(\"req.nephio.org.interface.star\",
+      \"getNetwork\", \"getAttachmentType\", \"getIPFamilyPolicy\", \"getInterfaces\")\nload(\"req.kuid.dev.attachments.star\",
+      \"getAttachmentReqSpec\", \"getAttachmentReq\", \"listReadyAttachmentRequests\",
+      \"getSpecInterface\", \"getSpecNetwork\", \"getStatusPrefixPerAF\")\n\nfinalizer
+      = \"nf.nephio.org.nfdeployments.upf.free5gc.io.ready\"\nconditionType = \"Ready\"\n\ndef
+      reconcile(self):\n  #self is nf deployment\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  attachmentRequests,
+      ready, err = listReadyAttachmentRequests({}, getUID(self))\n  if err != None:\n
+      \   return reconcile_result(self, False, 0, conditionType, err, False)\n  \n
+      \ if not ready:\n    return reconcile_result(self, False, 0, conditionType,
+      \"prefix req not ready\", False)\n    \n  afs = [\"ipv4\", \"ipv6\"]\n  interfaces
+      = []\n  networks = []\n  for attachementReq in attachmentRequests:\n    ifName
+      = getSpecInterface(attachementReq)\n    networkName = getSpecNetwork(attachementReq)\n
+      \   network, networkExists =  getLocalNetwork(networks, networkName)\n    networkInterfaces
+      = network.get(\"interfaces\", [])\n    networkInterfaces.append(ifName)\n    \n
+      \   interfaceConfig = {\"name\": ifName}\n    for af in afs:\n      prefixes
+      = getStatusPrefixPerAF(attachementReq, af)\n      if len(prefixes) > 0:\n        interfaceConfig[af]
+      = {\"address\": prefixes[0][\"prefix\"]}\n        if prefixes[0][\"defaultGateway\"]
+      != None:\n          interfaceConfig[af][\"gateway\"] = prefixes[0][\"defaultGateway\"]\n
+      \   interfaces.append(interfaceConfig)\n    if not networkExists:\n      networks.append(network)\n
+      \ \n  spec = getSpec(self)\n  spec[\"interfaces\"] = interfaces\n  spec[\"networkInstances\"]
+      = networks\n\n  return reconcile_result(self, False, 0, conditionType, \"\",
+      False)\n\n\ndef getLocalNetwork(networks, networkName):\n  for network in networks:\n
+      \   if network.get(\"name\", \"\") == networkName:\n      return network, True\n
+      \ return {\"name\": networkName, \"interfaces\": []}, False"
+  for:
+    group: nf.nephio.org
+    kind: NFDeployment
+    selector:
+      match:
+        spec.provider: upf.free5gc.io
+        status.conditions.exists(c, c.type == 'ClaimReady' && c.status == 'True'): "true"
+    version: v1alpha1
+  type: starlark
+  watches:
+  - group: req.nephio.org
+    kind: Capacity
+    selector:
+      match:
+        metadata.name: upf
+    version: v1alpha1
+  - group: req.kuid.dev
+    kind: Attachment
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"
+    version: v1alpha1
+status: {}
