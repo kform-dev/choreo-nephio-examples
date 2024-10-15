@@ -4,11 +4,12 @@
 
 ### crds
 
-used to store your apis
+used to store your crds (apis)
 
 ### in
 
 in the in folder you have 3 types of resource
+
 - input data:
     - interface requirements
     - capacity requirements
@@ -30,12 +31,12 @@ where the choreo db is located
 
 ## start server in human dev mode
 
-chorectl server start nf -r
+choreoctl server start nf -r
 
 ## run the reconciler
 
-chorectl run once
+choreoctl run once
 
-chorectl run diff
-chorectl run diff -a
+choreoctl run diff
+choreoctl run diff -a
 
