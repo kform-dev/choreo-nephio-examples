@@ -39,4 +39,12 @@ choreoctl run once
 
 choreoctl run diff
 choreoctl run diff -a
+choreoctl deps
 
+
+
+choreoctl apply nf/other/nf.nephio.org.nfdeployment.nephio.region1.us-east1.cluster1.upf2.yaml 
+
+choreoctl run once
+choreoctl run diff
+choreoctl deps
