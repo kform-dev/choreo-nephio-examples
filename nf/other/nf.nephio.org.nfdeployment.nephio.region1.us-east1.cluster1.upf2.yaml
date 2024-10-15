@@ -1,0 +1,12 @@
+apiVersion: nf.nephio.org/v1alpha1
+kind: NFDeployment
+metadata:
+  name: nephio.region1.us-east1.cluster1.upf2
+  namespace: default
+spec:
+  partition: nephio
+  region: region1
+  site: us-east1
+  cluster: cluster1
+  name: upf2
+  provider: upf.free5gc.io

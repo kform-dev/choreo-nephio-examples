@@ -18,15 +18,16 @@ def reconcile(self):
   setFinalizer(self, finalizer)
 
   attachmentName = getName(self)
-  if attachmentName == "nephio.region1.us-east1.cluster1.upf1.n3":
+  last_segment = attachmentName.split('.')[-1] 
+  if last_segment == "n3":
     setStatusPrefix(self, "ipv4", "192.1.0.0/24", "192.1.0.1")
     setStatusPrefix(self, "ipv6", "192:1::/64", "192:1::1")
     setStatusVLAN(self, 1)
-  elif attachmentName == "nephio.region1.us-east1.cluster1.upf1.n4":
+  elif last_segment == "n4":
     setStatusPrefix(self, "ipv4", "192.2.0.0/24", "192.2.0.1")
     setStatusPrefix(self, "ipv6", "192:2::/64", "192:2::1")
     setStatusVLAN(self, 2)
-  elif attachmentName == "nephio.region1.us-east1.cluster1.upf1.n6":
+  elif last_segment == "n6":
     setStatusPrefix(self, "ipv4", "192.3.0.0/24", "192.3.0.1")
     setStatusPrefix(self, "ipv6", "192:3::/64", "192:3::1")
     setStatusVLAN(self, 3)
